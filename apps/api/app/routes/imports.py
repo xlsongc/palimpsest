@@ -9,7 +9,13 @@ from app.repositories.import_repository import (
     create_import_session,
     get_import_session,
 )
-from app.schemas.imports import ImportCreateRequest, ImportSessionDTO
+from app.schemas.imports import (
+    ImportCreateRequest,
+    ImportParseResponseDTO,
+    ImportParseRowDTO,
+    ImportSessionDTO,
+)
+from app.services.import_parse_service import parse_import_session
 
 router = APIRouter()
 
@@ -55,3 +61,26 @@ def get_import(session_id: int, conn: DbDep):
     if session is None:
         raise HTTPException(status_code=404, detail="Import session not found")
     return _to_dto(session)
+
+
+@router.post("/imports/{session_id}/parse", response_model=ImportParseResponseDTO)
+def parse_import(session_id: int, conn: DbDep):
+    result = parse_import_session(conn, session_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Import session not found")
+
+    return ImportParseResponseDTO(
+        session=_to_dto(result.session),
+        rows=[
+            ImportParseRowDTO(
+                row_index=r.row_index,
+                raw_fragment=r.raw_fragment,
+                parsed_json=r.parsed_json,
+                status=r.status,
+                confidence=r.confidence,
+                warnings=r.warnings,
+            )
+            for r in result.rows
+        ],
+        parser_warnings=result.parser_warnings,
+    )

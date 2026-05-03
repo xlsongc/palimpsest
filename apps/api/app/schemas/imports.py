@@ -18,3 +18,18 @@ class ImportSessionDTO(BaseModel):
     inserted_count: int
     duplicate_count: int
     warning_count: int
+
+
+class ImportParseRowDTO(BaseModel):
+    row_index: int
+    raw_fragment: str
+    parsed_json: str | None
+    status: str
+    confidence: float
+    warnings: list[str]
+
+
+class ImportParseResponseDTO(BaseModel):
+    session: ImportSessionDTO
+    rows: list[ImportParseRowDTO]
+    parser_warnings: list[str]

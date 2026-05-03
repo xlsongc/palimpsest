@@ -155,3 +155,28 @@ def list_import_rows(
         )
         for r in rows
     ]
+
+
+def delete_import_rows_for_session(
+    conn: sqlite3.Connection, session_id: int
+) -> int:
+    cur = conn.execute("DELETE FROM import_rows WHERE session_id = ?", (session_id,))
+    conn.commit()
+    return cur.rowcount
+
+
+def update_import_session_counts(
+    conn: sqlite3.Connection,
+    session_id: int,
+    expected_count: int,
+    extracted_count: int,
+    warning_count: int,
+    status: str,
+) -> None:
+    conn.execute(
+        """UPDATE import_sessions
+           SET expected_count = ?, extracted_count = ?, warning_count = ?, status = ?
+           WHERE id = ?""",
+        (expected_count, extracted_count, warning_count, status, session_id),
+    )
+    conn.commit()
