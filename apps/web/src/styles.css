@@ -1,0 +1,387 @@
+:root {
+  color: #1d1913;
+  background: #f4efe6;
+  font-family: "Courier Prime", "Courier New", ui-monospace, monospace;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(120deg, rgba(43, 76, 126, 0.05), transparent 36%),
+    radial-gradient(circle at 82% 16%, rgba(126, 58, 43, 0.08), transparent 28%),
+    #f4efe6;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(520px, 1.4fr);
+  min-height: 100vh;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid rgba(29, 25, 19, 0.16);
+  padding: 48px;
+}
+
+.ascii {
+  margin: 0 0 44px;
+  color: #6b6257;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.kicker,
+.eyebrow {
+  margin: 0 0 12px;
+  color: #968a7c;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 620px;
+  margin-bottom: 22px;
+  font-size: clamp(40px, 6vw, 84px);
+  line-height: 1.03;
+  letter-spacing: 0;
+}
+
+.lead {
+  max-width: 560px;
+  color: #4d463d;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.system-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  border: 1px solid rgba(29, 25, 19, 0.16);
+  background: rgba(249, 246, 241, 0.7);
+  padding: 12px 14px;
+  color: #6b6257;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border: 1px solid #9f9386;
+  border-radius: 50%;
+}
+
+.status-dot.on {
+  background: #2b6b3a;
+  border-color: #2b6b3a;
+}
+
+.workspace {
+  padding: 32px;
+}
+
+.topbar {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid rgba(29, 25, 19, 0.16);
+  padding-bottom: 18px;
+}
+
+.topbar button {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #9b9084;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 9px 18px;
+  text-transform: uppercase;
+}
+
+.topbar button.active {
+  border-color: rgba(29, 25, 19, 0.24);
+  background: #ede8df;
+  color: #1d1913;
+}
+
+.panel {
+  margin-top: 28px;
+  min-height: calc(100vh - 116px);
+  border: 1px solid rgba(29, 25, 19, 0.16);
+  background: rgba(249, 246, 241, 0.62);
+  padding: 34px;
+}
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.section-head h2 {
+  max-width: 620px;
+  margin-bottom: 0;
+  font-size: 28px;
+  line-height: 1.2;
+  text-align: right;
+}
+
+.import-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) 280px;
+  gap: 22px;
+}
+
+textarea {
+  min-height: 420px;
+  resize: vertical;
+  border: 1px solid rgba(29, 25, 19, 0.18);
+  background: #f4efe6;
+  color: #1d1913;
+  outline: none;
+  padding: 22px;
+  line-height: 1.75;
+}
+
+.receipt {
+  border-left: 4px solid #2b4c7e;
+  background: #f9f6f1;
+  padding: 22px;
+}
+
+.receipt-title {
+  color: #1d1913;
+  font-weight: 700;
+}
+
+dl {
+  display: grid;
+  gap: 14px;
+  margin: 22px 0;
+}
+
+dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid rgba(29, 25, 19, 0.1);
+  padding-bottom: 10px;
+}
+
+dt {
+  color: #8c8175;
+  text-transform: uppercase;
+}
+
+dd {
+  margin: 0;
+  color: #1d1913;
+  font-weight: 700;
+}
+
+.muted {
+  color: #776d62;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.book-list {
+  display: grid;
+  gap: 12px;
+}
+
+.book-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  border-bottom: 1px solid rgba(29, 25, 19, 0.12);
+  padding: 20px 0;
+}
+
+.book-row h3 {
+  margin-bottom: 8px;
+  font-size: 22px;
+}
+
+.book-row p {
+  color: #60584f;
+  line-height: 1.6;
+}
+
+.book-row > span {
+  align-self: start;
+  border: 1px solid rgba(43, 107, 58, 0.35);
+  color: #2b6b3a;
+  padding: 5px 10px;
+}
+
+.book-theme {
+  margin-bottom: 8px;
+  color: #968a7c;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.graph-panel {
+  overflow: hidden;
+}
+
+.graph-stage {
+  position: relative;
+  height: 420px;
+  border: 1px solid rgba(29, 25, 19, 0.12);
+  background:
+    radial-gradient(ellipse at 22% 35%, rgba(43, 76, 126, 0.08), transparent 28%),
+    radial-gradient(ellipse at 70% 68%, rgba(126, 58, 43, 0.08), transparent 30%),
+    radial-gradient(ellipse at 78% 22%, rgba(26, 107, 85, 0.07), transparent 24%),
+    rgba(244, 239, 230, 0.7);
+}
+
+.graph-stage svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.graph-stage path {
+  fill: none;
+  stroke: rgba(43, 76, 126, 0.42);
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.node {
+  position: absolute;
+  z-index: 1;
+  border: 2px solid #2b6b3a;
+  border-radius: 999px;
+  background: rgba(43, 76, 126, 0.82);
+  color: #1d1913;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 12px 14px;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+}
+
+.node-a {
+  left: 16%;
+  top: 28%;
+}
+
+.node-b {
+  left: 60%;
+  top: 29%;
+}
+
+.node-c {
+  left: 36%;
+  top: 78%;
+  background: rgba(126, 58, 43, 0.82);
+}
+
+.node-d {
+  left: 82%;
+  top: 74%;
+  background: rgba(107, 90, 26, 0.74);
+}
+
+.node-e {
+  left: 77%;
+  top: 21%;
+  background: rgba(26, 107, 85, 0.72);
+}
+
+.node-f {
+  left: 44%;
+  top: 22%;
+  background: rgba(74, 43, 126, 0.72);
+}
+
+.node-g {
+  left: 20%;
+  top: 59%;
+  background: rgba(126, 58, 43, 0.66);
+}
+
+.node-h {
+  left: 54%;
+  top: 54%;
+  background: rgba(107, 90, 26, 0.62);
+}
+
+.edge-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 22px;
+  color: #776d62;
+}
+
+.edge-list p {
+  margin: 0;
+}
+
+.edge-list span {
+  color: #1d1913;
+  font-weight: 700;
+}
+
+@media (max-width: 980px) {
+  .shell,
+  .import-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .intro {
+    min-height: auto;
+    gap: 40px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(29, 25, 19, 0.16);
+    padding: 32px;
+  }
+
+  .workspace {
+    padding: 22px;
+  }
+
+  .section-head {
+    display: block;
+  }
+
+  .section-head h2 {
+    text-align: left;
+  }
+}

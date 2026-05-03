@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Palimpsest / 忘筌 Preview</title>
+    <style>
+      :root {
+        color: #1d1913;
+        background: #f4efe6;
+        font-family: "Courier Prime", "Courier New", ui-monospace, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background:
+          linear-gradient(120deg, rgba(43, 76, 126, 0.05), transparent 36%),
+          radial-gradient(circle at 82% 16%, rgba(126, 58, 43, 0.08), transparent 28%),
+          #f4efe6;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: minmax(320px, 0.9fr) minmax(520px, 1.4fr);
+        min-height: 100vh;
+      }
+
+      .intro {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-right: 1px solid rgba(29, 25, 19, 0.16);
+        padding: 48px;
+      }
+
+      .ascii {
+        margin: 0 0 44px;
+        color: #6b6257;
+        font-size: 14px;
+        line-height: 1.35;
+      }
+
+      .kicker,
+      .eyebrow {
+        margin: 0 0 12px;
+        color: #968a7c;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        max-width: 620px;
+        margin-bottom: 22px;
+        font-size: clamp(40px, 6vw, 84px);
+        line-height: 1.03;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 560px;
+        color: #4d463d;
+        font-size: 17px;
+        line-height: 1.7;
+      }
+
+      .system-card {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        width: fit-content;
+        border: 1px solid rgba(29, 25, 19, 0.16);
+        background: rgba(249, 246, 241, 0.7);
+        padding: 12px 14px;
+        color: #6b6257;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .status-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #2b6b3a;
+      }
+
+      .workspace {
+        padding: 32px;
+      }
+
+      .topbar {
+        display: flex;
+        gap: 8px;
+        border-bottom: 1px solid rgba(29, 25, 19, 0.16);
+        padding-bottom: 18px;
+      }
+
+      .topbar span {
+        border: 1px solid transparent;
+        color: #9b9084;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        padding: 9px 18px;
+        text-transform: uppercase;
+      }
+
+      .topbar span:first-child {
+        border-color: rgba(29, 25, 19, 0.24);
+        background: #ede8df;
+        color: #1d1913;
+      }
+
+      .panel {
+        margin-top: 28px;
+        min-height: calc(100vh - 116px);
+        border: 1px solid rgba(29, 25, 19, 0.16);
+        background: rgba(249, 246, 241, 0.62);
+        padding: 34px;
+        overflow: hidden;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 28px;
+      }
+
+      .section-head h2 {
+        max-width: 620px;
+        margin-bottom: 0;
+        font-size: 28px;
+        line-height: 1.2;
+        text-align: right;
+      }
+
+      .graph-stage {
+        position: relative;
+        height: 460px;
+        border: 1px solid rgba(29, 25, 19, 0.12);
+        background:
+          radial-gradient(ellipse at 22% 35%, rgba(43, 76, 126, 0.08), transparent 28%),
+          radial-gradient(ellipse at 70% 68%, rgba(126, 58, 43, 0.08), transparent 30%),
+          radial-gradient(ellipse at 78% 22%, rgba(26, 107, 85, 0.07), transparent 24%),
+          rgba(244, 239, 230, 0.7);
+      }
+
+      .graph-stage svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .graph-stage path {
+        fill: none;
+        stroke: rgba(43, 76, 126, 0.42);
+        stroke-linecap: round;
+        stroke-width: 2;
+      }
+
+      .node {
+        position: absolute;
+        z-index: 1;
+        border: 2px solid #2b6b3a;
+        border-radius: 999px;
+        background: rgba(43, 76, 126, 0.82);
+        color: #1d1913;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 12px 14px;
+        transform: translate(-50%, -50%);
+        white-space: nowrap;
+      }
+
+      .a { left: 16%; top: 28%; }
+      .b { left: 60%; top: 29%; }
+      .c { left: 36%; top: 78%; background: rgba(126, 58, 43, 0.82); }
+      .d { left: 82%; top: 74%; background: rgba(107, 90, 26, 0.74); }
+      .e { left: 77%; top: 21%; background: rgba(26, 107, 85, 0.72); }
+      .f { left: 44%; top: 22%; background: rgba(74, 43, 126, 0.72); }
+      .g { left: 20%; top: 59%; background: rgba(126, 58, 43, 0.66); }
+      .h { left: 54%; top: 54%; background: rgba(107, 90, 26, 0.62); }
+
+      @media (max-width: 980px) {
+        .shell {
+          grid-template-columns: 1fr;
+        }
+
+        .intro {
+          min-height: auto;
+          gap: 40px;
+          border-right: 0;
+          border-bottom: 1px solid rgba(29, 25, 19, 0.16);
+          padding: 32px;
+        }
+
+        .workspace {
+          padding: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="intro">
+        <div>
+          <pre class="ascii">                 ·
+          ·              ·
+
+              &gt;&lt;(((º&gt;
+
+       water without water
+       trace without capture</pre>
+          <p class="kicker">PALIMPSEST / 忘筌</p>
+          <h1>得鱼而忘筌；得意而忘言。</h1>
+          <p class="lead">
+            A local-first reading intelligence system for turning reading
+            traces into recall, connection, judgment, and action.
+          </p>
+        </div>
+        <div class="system-card">
+          <span class="status-dot"></span>
+          <span>Static preview</span>
+        </div>
+      </aside>
+      <section class="workspace">
+        <nav class="topbar">
+          <span>Graph</span>
+          <span>Import</span>
+          <span>Library</span>
+        </nav>
+        <section class="panel">
+          <div class="section-head">
+            <p class="eyebrow">Connect</p>
+            <h2>Explainable reading graph, naturally unfolded</h2>
+          </div>
+          <div class="graph-stage">
+            <div class="node a">Poor Charlie</div>
+            <div class="node b">影响力</div>
+            <div class="node c">失去的三十年</div>
+            <div class="node d">涛动周期论</div>
+            <div class="node e">算法导论</div>
+            <div class="node f">芯片战争</div>
+            <div class="node g">海洋帝国</div>
+            <div class="node h">GEB</div>
+            <svg viewBox="0 0 720 420" role="presentation">
+              <path d="M112 120 C215 68 315 72 430 118"></path>
+              <path d="M112 132 C210 205 300 250 435 300"></path>
+              <path d="M238 335 C328 370 455 360 596 318"></path>
+              <path d="M555 92 C584 138 610 190 638 250"></path>
+              <path d="M145 250 C226 206 305 196 388 220"></path>
+              <path d="M315 92 C374 128 432 168 505 230"></path>
+            </svg>
+          </div>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>

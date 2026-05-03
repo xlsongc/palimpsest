@@ -1,6 +1,7 @@
 # Palimpsest / 忘筌
 
 [中文介绍](docs/README.zh.md)
+· [Static preview](preview/index.html)
 
 > 得鱼而忘筌；得意而忘言。
 
