@@ -98,6 +98,7 @@ CREATE TABLE IF NOT EXISTS user_book_entries (
     comment TEXT,
     read_started_at TEXT,
     read_finished_at TEXT,
+    marked_at TEXT,              -- date the user marked the book as want/reading
     douban_url TEXT,
     source_session_id INTEGER NOT NULL REFERENCES import_sessions(id),
     source_row_id INTEGER NOT NULL REFERENCES import_rows(id),

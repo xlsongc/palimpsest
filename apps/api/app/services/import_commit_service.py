@@ -105,14 +105,18 @@ def commit_import_session(
             book_id = book.id
 
         read_date = parsed.get("read_date")
+        marked_date = parsed.get("marked_date")
         row_status = parsed.get("status")
 
         read_started_at = None
         read_finished_at = None
+        marked_at = None
         if row_status == "reading" and read_date:
             read_started_at = read_date
         elif row_status == "read" and read_date:
             read_finished_at = read_date
+        elif row_status == "want" and marked_date:
+            marked_at = marked_date
 
         entry = create_user_book_entry(
             conn,
@@ -125,6 +129,7 @@ def commit_import_session(
             comment=parsed.get("comment"),
             read_started_at=read_started_at,
             read_finished_at=read_finished_at,
+            marked_at=marked_at,
             confidence=row.confidence,
         )
 

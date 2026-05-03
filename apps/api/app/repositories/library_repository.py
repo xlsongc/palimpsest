@@ -31,6 +31,7 @@ class UserBookEntry:
     comment: str | None
     read_started_at: str | None
     read_finished_at: str | None
+    marked_at: str | None
     douban_url: str | None
     source_session_id: int
     source_row_id: int
@@ -108,16 +109,17 @@ def create_user_book_entry(
     comment: str | None = None,
     read_started_at: str | None = None,
     read_finished_at: str | None = None,
+    marked_at: str | None = None,
     confidence: float = 0.0,
 ) -> UserBookEntry:
     tags_json = json.dumps(tags or [], ensure_ascii=False)
     cur = conn.execute(
         """INSERT INTO user_book_entries
            (book_id, source_session_id, source_row_id, status, rating, tags_json,
-            comment, read_started_at, read_finished_at, confidence)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            comment, read_started_at, read_finished_at, marked_at, confidence)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (book_id, source_session_id, source_row_id, status, rating, tags_json,
-         comment, read_started_at, read_finished_at, confidence),
+         comment, read_started_at, read_finished_at, marked_at, confidence),
     )
     conn.commit()
     entry = _get_user_book_entry(conn, cur.lastrowid)
@@ -177,6 +179,7 @@ def _row_to_entry(row: sqlite3.Row) -> UserBookEntry:
         comment=row["comment"],
         read_started_at=row["read_started_at"],
         read_finished_at=row["read_finished_at"],
+        marked_at=row["marked_at"],
         douban_url=row["douban_url"],
         source_session_id=row["source_session_id"],
         source_row_id=row["source_row_id"],

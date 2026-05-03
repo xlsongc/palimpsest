@@ -62,6 +62,7 @@ def test_create_user_book_entry_keeps_source_linkage(conn: sqlite3.Connection):
         source_row_id=row.id,
         status="read",
         tags=["test"],
+        marked_at="2026-01-01",
         confidence=0.95,
     )
 
@@ -69,6 +70,7 @@ def test_create_user_book_entry_keeps_source_linkage(conn: sqlite3.Connection):
     assert entry.source_session_id == session.id
     assert entry.source_row_id == row.id
     assert entry.status == "read"
+    assert entry.marked_at == "2026-01-01"
     assert json.loads(entry.tags_json) == ["test"]
 
 

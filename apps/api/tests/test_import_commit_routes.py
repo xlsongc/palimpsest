@@ -87,6 +87,23 @@ def test_commit_source_linkage(client: TestClient, conn: sqlite3.Connection):
         assert row["source_row_id"] == c["row_id"]
 
 
+def test_commit_want_entry_persists_marked_date(
+    client: TestClient, conn: sqlite3.Connection
+):
+    raw = (FIXTURES_DIR / "want_list_page_raw.txt").read_text()
+    session_id = _create_parse_review_accept(client, raw)
+
+    resp = client.post(f"/api/imports/{session_id}/commit")
+    first_entry_id = resp.json()["committed"][0]["entry_id"]
+
+    row = conn.execute(
+        "SELECT status, marked_at FROM user_book_entries WHERE id = ?",
+        (first_entry_id,),
+    ).fetchone()
+    assert row["status"] == "want"
+    assert row["marked_at"] == "2026-05-02"
+
+
 # --- Rejected rows skipped ---
 
 def test_commit_rejected_rows_skipped(client: TestClient, conn: sqlite3.Connection):
