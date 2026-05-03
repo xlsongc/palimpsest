@@ -180,3 +180,48 @@ def update_import_session_counts(
         (expected_count, extracted_count, warning_count, status, session_id),
     )
     conn.commit()
+
+
+def update_import_row_status(
+    conn: sqlite3.Connection,
+    row_id: int,
+    status: str,
+) -> None:
+    conn.execute("UPDATE import_rows SET status = ? WHERE id = ?", (status, row_id))
+    conn.commit()
+
+
+def update_import_row_parsed_json(
+    conn: sqlite3.Connection,
+    row_id: int,
+    parsed_json: str,
+) -> None:
+    conn.execute(
+        "UPDATE import_rows SET parsed_json = ? WHERE id = ?",
+        (parsed_json, row_id),
+    )
+    conn.commit()
+
+
+def update_import_session_status(
+    conn: sqlite3.Connection,
+    session_id: int,
+    status: str,
+) -> None:
+    conn.execute(
+        "UPDATE import_sessions SET status = ? WHERE id = ?",
+        (status, session_id),
+    )
+    conn.commit()
+
+
+def count_import_rows_by_status(
+    conn: sqlite3.Connection,
+    session_id: int,
+    status: str,
+) -> int:
+    row = conn.execute(
+        "SELECT COUNT(*) AS cnt FROM import_rows WHERE session_id = ? AND status = ?",
+        (session_id, status),
+    ).fetchone()
+    return row["cnt"]

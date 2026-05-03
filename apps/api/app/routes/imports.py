@@ -13,9 +13,15 @@ from app.schemas.imports import (
     ImportCreateRequest,
     ImportParseResponseDTO,
     ImportParseRowDTO,
+    ImportReviewRequestDTO,
+    ImportReviewResponseDTO,
+    ImportReviewSubmitResponseDTO,
     ImportSessionDTO,
+    ReviewRowDTO,
+    UpdatedRowDTO,
 )
 from app.services.import_parse_service import parse_import_session
+from app.services.import_review_service import get_review_rows, submit_review
 
 router = APIRouter()
 
@@ -83,4 +89,46 @@ def parse_import(session_id: int, conn: DbDep):
             for r in result.rows
         ],
         parser_warnings=result.parser_warnings,
+    )
+
+
+@router.get("/imports/{session_id}/review", response_model=ImportReviewResponseDTO)
+def get_review(session_id: int, conn: DbDep):
+    result = get_review_rows(conn, session_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Import session not found")
+
+    return ImportReviewResponseDTO(
+        session=_to_dto(result.session),
+        rows=[
+            ReviewRowDTO(
+                row_id=r.row_id,
+                row_index=r.row_index,
+                raw_fragment=r.raw_fragment,
+                parsed_json=r.parsed_json,
+                status=r.status,
+                confidence=r.confidence,
+                warnings=r.warnings,
+            )
+            for r in result.rows
+        ],
+    )
+
+
+@router.post("/imports/{session_id}/review", response_model=ImportReviewSubmitResponseDTO)
+def submit_review_action(session_id: int, body: ImportReviewRequestDTO, conn: DbDep):
+    row_actions = [r.model_dump() for r in body.rows]
+    result = submit_review(conn, session_id, row_actions)
+
+    if result.error == "session_not_found":
+        raise HTTPException(status_code=404, detail="Import session not found")
+    if result.error:
+        raise HTTPException(status_code=422, detail=result.error)
+
+    return ImportReviewSubmitResponseDTO(
+        session=_to_dto(result.session),
+        updated_rows=[
+            UpdatedRowDTO(row_id=r.row_id, status=r.status)
+            for r in result.updated_rows
+        ],
     )

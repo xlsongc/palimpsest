@@ -30,6 +30,41 @@ CREATE TABLE IF NOT EXISTS import_rows (
     warnings_json TEXT,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS books (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    subtitle TEXT,
+    authors_json TEXT,
+    isbn10 TEXT,
+    isbn13 TEXT,
+    publisher TEXT,
+    published_date TEXT,
+    language TEXT,
+    page_count INTEGER,
+    cover_url TEXT,
+    description TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS user_book_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    book_id INTEGER NOT NULL REFERENCES books(id),
+    status TEXT,
+    rating REAL,
+    tags_json TEXT,
+    comment TEXT,
+    read_started_at TEXT,
+    read_finished_at TEXT,
+    douban_url TEXT,
+    source_session_id INTEGER NOT NULL REFERENCES import_sessions(id),
+    source_row_id INTEGER NOT NULL REFERENCES import_rows(id),
+    confidence REAL NOT NULL DEFAULT 0.0,
+    review_status TEXT NOT NULL DEFAULT 'accepted',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 """
 
 DEFAULT_DB_PATH = Path(__file__).resolve().parents[4] / "data" / "local" / "book_graph.db"

@@ -28,6 +28,7 @@ Build the project foundation without coupling future parser, metadata, graph, an
 | BG-009 | done | implementation | Implement deterministic Douban paste parser | Parser tests pass |
 | BG-010 | done | implementation | Add import parse endpoint | API tests pass |
 | BG-011 | done | planning | Define review/commit acceptance cases | Cases documented |
+| BG-012a | done | implementation | Add review backend foundation | API tests pass |
 | BG-012 | todo | implementation | Add review and commit backend flow | API tests pass |
 | BG-013 | todo | implementation | Add validation report endpoint | API tests pass |
 | BG-014 | todo | implementation | Add basic import/review UI | Manual flow works |
