@@ -225,71 +225,73 @@ button {
   position: absolute;
   border: 1px solid rgba(88, 82, 76, 0.08);
   border-radius: 50%;
-  filter: blur(0.3px);
-  opacity: 0.5;
-  transform: rotate(-8deg);
+  filter: blur(0.2px);
+  opacity: 0.62;
+  transform: rotate(-12deg);
+  pointer-events: none;
 }
 
 .finance-field {
-  right: 5%;
-  top: 10%;
-  width: 620px;
-  height: 560px;
-  background: rgba(42, 79, 134, 0.1);
+  right: 7%;
+  top: 8%;
+  width: 680px;
+  height: 620px;
+  background: rgba(42, 79, 134, 0.13);
 }
 
 .cs-field {
-  left: 3%;
-  top: 8%;
-  width: 320px;
-  height: 480px;
-  background: rgba(31, 116, 87, 0.08);
+  left: 6%;
+  top: 4%;
+  width: 360px;
+  height: 520px;
+  background: rgba(31, 116, 87, 0.1);
 }
 
 .history-field {
-  left: 35%;
-  top: 2%;
-  width: 480px;
-  height: 660px;
-  background: rgba(139, 58, 43, 0.06);
+  left: 40%;
+  top: 6%;
+  width: 520px;
+  height: 700px;
+  background: rgba(139, 58, 43, 0.08);
 }
 
-.literature-field {
-  right: 8%;
-  top: -10%;
-  width: 300px;
-  height: 300px;
-  background: rgba(40, 114, 62, 0.06);
+.humanities-field {
+  right: 1%;
+  top: -18%;
+  width: 540px;
+  height: 880px;
+  background: rgba(124, 93, 52, 0.08);
 }
 
-.psychology-field {
-  right: 2%;
-  top: 25%;
-  width: 280px;
-  height: 380px;
-  background: rgba(23, 93, 107, 0.06);
-}
-
-/* Edges */
-.edge-layer {
+.graph-layer {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 4;
   width: 100%;
   height: 100%;
-  opacity: 0.4;
+  cursor: grab;
+  touch-action: none;
 }
 
-.edge-layer path {
+.graph-layer:active {
+  cursor: grabbing;
+}
+
+.graph-layer .edge-layer {
+  opacity: 0.46;
+}
+
+.graph-layer .edge-layer path {
   fill: none;
   stroke-linecap: round;
-  stroke-width: 1.8;
-  opacity: 0.7;
+  stroke-width: 2.2;
+  opacity: 0.42;
+  vector-effect: non-scaling-stroke;
 }
 
-.edge-layer path.strong {
-  stroke-width: 3.5;
-  opacity: 0.85;
+.graph-layer .edge-layer path.strong {
+  stroke-width: 5;
+  opacity: 0.78;
 }
 
 /* Cluster rings */
@@ -315,6 +317,78 @@ button {
   width: 360px;
   height: 340px;
   border-color: rgba(42, 79, 134, 0.25);
+}
+
+.graph-node {
+  --theme: #294f86;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.18s ease;
+}
+
+.graph-node circle {
+  fill: color-mix(in srgb, var(--theme) 82%, #eee9df 18%);
+  stroke: #2f7441;
+  stroke-width: 3;
+  filter: drop-shadow(0 7px 10px rgba(36, 30, 24, 0.14));
+  vector-effect: non-scaling-stroke;
+}
+
+.graph-node.want circle {
+  fill: rgba(238, 233, 223, 0.34);
+  stroke: #c3bbb2;
+}
+
+.graph-node.reading circle {
+  stroke-dasharray: 5 4;
+}
+
+.graph-node.selected circle {
+  stroke-width: 4;
+  filter:
+    drop-shadow(0 0 0 rgba(0, 0, 0, 0))
+    drop-shadow(0 7px 12px rgba(36, 30, 24, 0.16));
+}
+
+.graph-node.muted {
+  opacity: 0.2;
+}
+
+.graph-node text {
+  fill: #2c2722;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  paint-order: stroke;
+  pointer-events: none;
+  stroke: rgba(244, 239, 231, 0.92);
+  stroke-width: 5px;
+  text-anchor: middle;
+  user-select: none;
+}
+
+.graph-controls {
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  z-index: 8;
+  display: flex;
+  gap: 6px;
+  border: 1px solid rgba(34, 29, 24, 0.14);
+  background: rgba(250, 247, 242, 0.7);
+  box-shadow: 0 12px 24px rgba(36, 30, 24, 0.06);
+  padding: 6px;
+}
+
+.graph-controls button {
+  min-width: 32px;
+  border: 1px solid rgba(34, 29, 24, 0.16);
+  background: rgba(238, 233, 223, 0.74);
+  color: #7e746b;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  padding: 6px 8px;
 }
 
 /* Book nodes */
