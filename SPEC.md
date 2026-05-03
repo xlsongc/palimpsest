@@ -13,7 +13,7 @@ Name thesis:
 ```text
 Palimpsest: reading traces are layered, overwritten, and made visible again.
 忘筌: books, notes, graphs, and AI are means, not ends.
-愿你得鱼而忘筌；得意而忘言。
+得鱼而忘筌；得意而忘言。
 ```
 
 Product thesis:

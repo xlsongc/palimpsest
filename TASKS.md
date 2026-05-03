@@ -81,37 +81,47 @@ Handoff Required:
 
 ## Next Implementation Packet
 
-Recommended next packet:
+Recommended next packet for opencode + MiMo. The planning agent will review the handoff before parser implementation starts.
 
 ```md
 ## Task: BG-006 Douban Paste Fixtures
 
 Context:
-The parser should be test-driven against realistic copied Douban reading records. Before implementing parser logic, define representative fixtures and expected parsed rows.
+We need realistic parser fixtures before writing parser code. The goal is to make Douban import test-driven and auditable.
 
 Scope:
 - Own `apps/api/tests/fixtures/douban_paste/**`
-- May add parser fixture documentation under `docs/fixtures/`
+- May add `docs/fixtures/douban-paste.md`
 - Do not implement parser logic yet
+- Do not change database or API code
 
 Requirements:
-- Add at least 3 raw paste fixtures:
-  - read list sample
-  - want-to-read list sample
-  - noisy mixed sample
-- Add expected parsed JSON for each fixture.
-- Preserve raw fragments and expected warnings.
+- Add at least 3 raw fixture files:
+  - `read_list_raw.txt`
+  - `want_list_raw.txt`
+  - `mixed_noisy_raw.txt`
+- Add expected parsed JSON files for each fixture:
+  - `read_list_expected.json`
+  - `want_list_expected.json`
+  - `mixed_noisy_expected.json`
+- Each expected row should include `raw_fragment`, `title`, `status`, optional visible fields, `confidence`, and `warnings`.
+- Document assumptions about copied Douban formats.
 
 Acceptance Criteria:
-- Fixture files are committed.
-- Expected outputs document title, status, rating/comment/date when available, and parser confidence expectations.
+- Fixture files are readable and expected JSON is valid.
+- Fixtures cover happy path and noisy input.
+- No parser implementation is added.
 
 Constraints:
 - No parser code.
 - No database changes.
 
+Verification:
+- `python -m json.tool <expected-json-file>` works for all expected JSON files.
+
 Handoff Required:
-- Added fixture files
-- Explanation of assumptions
-- Open questions about real Douban copy format
+- Changed files.
+- Assumptions about Douban copied text.
+- Any real sample gaps that need user input.
+- Verification results.
 ```

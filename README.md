@@ -2,7 +2,7 @@
 
 [中文介绍](docs/README.zh.md)
 
-> 愿你得鱼而忘筌；得意而忘言。
+> 得鱼而忘筌；得意而忘言。
 
 Palimpsest / 忘筌 is a local-first personal reading intelligence system. The goal is not only to record books, but to turn reading into searchable, connected, reusable, and actionable knowledge assets.
 
