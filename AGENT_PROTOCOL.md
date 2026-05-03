@@ -51,6 +51,7 @@ All agents follow these constraints:
 - Do not let parser, LLM, provider, or graph code write directly to the database.
 - Do not let React components call external book metadata APIs directly.
 - Prefer typed DTOs and service boundaries over ad hoc data passing.
+- Keep package `__init__.py` files thin. Put implementation in named modules and use `__init__.py` only for stable re-exports.
 - Treat `SPEC.md` as the product source of truth.
 - Treat `IMPLEMENTATION_PLAN.md` as the execution source of truth.
 - Treat `TASKS.md` as the current backlog and status tracker.
