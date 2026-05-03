@@ -133,6 +133,36 @@ def test_commit_rejected_rows_skipped(client: TestClient, conn: sqlite3.Connecti
     assert rows[1]["row_id"] in skipped_ids
 
 
+def test_commit_needs_edit_rows_are_committed_after_review(client: TestClient):
+    raw = (FIXTURES_DIR / "read_list_page_raw.txt").read_text()
+    resp = client.post("/api/imports", json={"raw_input": raw})
+    session_id = resp.json()["id"]
+    client.post(f"/api/imports/{session_id}/parse")
+
+    review_resp = client.get(f"/api/imports/{session_id}/review")
+    rows = review_resp.json()["rows"][:2]
+
+    client.post(f"/api/imports/{session_id}/review", json={
+        "rows": [
+            {
+                "row_id": row["row_id"],
+                "action": "needs_edit",
+                "title": row["parsed_json"]["title"],
+                "status": row["parsed_json"]["status"],
+                "read_date": row["parsed_json"].get("read_date"),
+                "marked_date": row["parsed_json"].get("marked_date"),
+            }
+            for row in rows
+        ]
+    })
+
+    resp = client.post(f"/api/imports/{session_id}/commit")
+    data = resp.json()
+
+    assert len(data["committed"]) == 2
+    assert data["session"]["inserted_count"] == 2
+
+
 # --- Pending rows not committed ---
 
 def test_commit_pending_rows_not_committed(client: TestClient):

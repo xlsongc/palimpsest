@@ -271,3 +271,17 @@ Naval Ravikant、Eric Jorgenson / Magrathea Publishing / 2020-9-8 / USD 12.84
     assert result.rows[1].tags == ["vibecoding"]
     assert result.rows[0].authors == ["Philip A. Fisher"]
     assert result.rows[2].authors == ["Naval Ravikant", "Eric Jorgenson"]
+
+
+def test_profile_username_header_is_not_extracted_as_book():
+    result = parse_douban_paste(
+        "Niko_ppp\n"
+        "我读过的书(26)\n"
+        "读书主页 书评 笔记 在读 想读 读过 作者 豆列 书单 设置 | 豆瓣主页\n\n"
+        "指数基金投资指南\n"
+        "银行螺丝钉 / 中信出版社 / 2017-11-1 / 59.00元\n"
+        "2026-05-01 读过 标签: 金融\n\n"
+        "修改    删除\n"
+    )
+
+    assert [row.title for row in result.rows] == ["指数基金投资指南"]

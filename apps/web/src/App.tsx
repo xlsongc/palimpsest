@@ -6,7 +6,7 @@ import GraphTopbar from "./features/graph/GraphTopbar";
 import GraphCanvas from "./features/graph/GraphCanvas";
 import ThemeIndex from "./features/graph/ThemeIndex";
 import BookDrawer from "./features/graph/BookDrawer";
-import { getGraph, type GraphNodeDTO, type GraphEdgeDTO } from "./api";
+import { getGraph, rebuildGraph, type GraphNodeDTO, type GraphEdgeDTO } from "./api";
 import { type ReadingStatus, type ThemeKey } from "./features/graph/data";
 
 // Infer theme from tags
@@ -32,19 +32,25 @@ function App() {
   const [allEdges, setAllEdges] = useState<GraphEdgeDTO[]>([]);
   const [graphLoading, setGraphLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("/api/health")
-      .then((res) => res.ok ? res.json() : Promise.reject())
-      .then((d) => setHealth(d.status ?? "ok"))
-      .catch(() => setHealth(null));
-
-    getGraph()
+  function refreshGraph(rebuild = false) {
+    setGraphLoading(true);
+    const load = rebuild ? rebuildGraph() : getGraph();
+    return load
       .then((data) => {
         setAllNodes(data.nodes);
         setAllEdges(data.edges);
       })
       .catch(() => {})
       .finally(() => setGraphLoading(false));
+  }
+
+  useEffect(() => {
+    fetch("/api/health")
+      .then((res) => res.ok ? res.json() : Promise.reject())
+      .then((d) => setHealth(d.status ?? "ok"))
+      .catch(() => setHealth(null));
+
+    refreshGraph();
   }, []);
 
   const selectedNode = selectedId ? allNodes.find(n => n.id === selectedId) : null;
@@ -79,7 +85,7 @@ function App() {
             <span>books</span>
           </div>
         </header>
-        <ImportPage />
+        <ImportPage onImportCommitted={() => refreshGraph(true)} />
       </main>
     );
   }

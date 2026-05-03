@@ -15,7 +15,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   background:
     radial-gradient(circle at 82% 18%, rgba(128, 74, 44, 0.06), transparent 24%),
     linear-gradient(120deg, rgba(42, 78, 134, 0.04), transparent 42%),
@@ -43,6 +43,7 @@ button {
 }
 
 .import-shell {
+  height: 100vh;
   overflow: auto;
 }
 

@@ -69,7 +69,7 @@ def commit_import_session(
     duplicate_count = 0
 
     for row in rows:
-        if row.status != "accepted":
+        if row.status not in {"accepted", "needs_edit"}:
             reason = row.status if row.status != "pending" else "not_reviewed"
             skipped.append(SkippedRow(row_id=row.id, reason=reason))
             continue

@@ -27,7 +27,11 @@ interface EditableRow {
   tags: string;
 }
 
-export default function ImportPage() {
+interface ImportPageProps {
+  onImportCommitted?: () => void | Promise<void>;
+}
+
+export default function ImportPage({ onImportCommitted }: ImportPageProps) {
   const [step, setStep] = useState<Step>("paste");
   const [rawInput, setRawInput] = useState("");
   const [session, setSession] = useState<ImportSessionDTO | null>(null);
@@ -99,8 +103,9 @@ export default function ImportPage() {
     try {
       const actions: ReviewRowAction[] = [];
       for (const [, er] of editableRows) {
-        const a: ReviewRowAction = { row_id: er.row_id, action: er.action };
-        if (er.action === "accept" || er.action === "needs_edit") {
+        const action = er.action === "needs_edit" && er.title.trim() ? "accept" : er.action;
+        const a: ReviewRowAction = { row_id: er.row_id, action };
+        if (action === "accept" || action === "needs_edit") {
           a.title = er.title;
           a.authors = er.authors ? er.authors.split(",").map((s) => s.trim()).filter(Boolean) : [];
           a.status = er.status || null;
@@ -117,6 +122,7 @@ export default function ImportPage() {
       await commitImport(session.id);
       const v = await getValidation(session.id);
       setValidation(v);
+      await onImportCommitted?.();
       setStep("done");
     } catch (e) {
       showError(e);
@@ -182,7 +188,7 @@ export default function ImportPage() {
           <div className="section-heading">
             <p>Import Review</p>
             <h2>Review {rows.length} rows before commit</h2>
-            <span>Low-confidence rows default to Needs Edit. Change to Accept only after checking.</span>
+            <span>Warnings mark rows for attention, but titled rows will still commit unless you reject them.</span>
           </div>
           <div className="review-actions">
             <button onClick={handleSubmitReview} disabled={loading}>

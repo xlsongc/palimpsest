@@ -61,6 +61,9 @@ def _split_blocks(raw_input: str) -> list[str]:
     blocks: list[str] = []
     current: list[str] = []
     for line in raw_input.split("\n"):
+        if re.match(r"^\s*我(在读|想读|读过)的书\(\d+\)\s*$", line.strip()):
+            current = []
+            continue
         if re.match(r"^\s*(赞\s+回复|修改\s+删除)\s*$", line.strip()):
             if current:
                 # Strip trailing blank lines from block
