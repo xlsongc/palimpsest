@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from pathlib import Path
 
@@ -31,9 +32,11 @@ CREATE TABLE IF NOT EXISTS import_rows (
 );
 """
 
+DEFAULT_DB_PATH = Path(__file__).resolve().parents[4] / "data" / "local" / "book_graph.db"
+
 
 def get_connection(db_path: str | Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(str(db_path))
+    conn = sqlite3.connect(str(db_path), check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
@@ -42,3 +45,11 @@ def get_connection(db_path: str | Path) -> sqlite3.Connection:
 
 def init_schema(conn: sqlite3.Connection) -> None:
     conn.executescript(_SCHEMA_SQL)
+
+
+def get_app_connection() -> sqlite3.Connection:
+    db_path = Path(os.environ.get("PALIMPSEST_DB_PATH", DEFAULT_DB_PATH))
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = get_connection(db_path)
+    init_schema(conn)
+    return conn

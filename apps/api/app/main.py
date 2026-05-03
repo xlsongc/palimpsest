@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes.health import router as health_router
+from app.routes.imports import router as imports_router
 
 app = FastAPI(title="Palimpsest API")
 
@@ -14,3 +15,4 @@ app.add_middleware(
 )
 
 app.include_router(health_router, prefix="/api")
+app.include_router(imports_router, prefix="/api")

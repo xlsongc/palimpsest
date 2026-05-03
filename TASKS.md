@@ -24,7 +24,7 @@ Build the project foundation without coupling future parser, metadata, graph, an
 | BG-005 | done | implementation | Add frontend API client and health status display | Web calls `/api/health` |
 | BG-006 | done | implementation | Provide representative Douban paste fixtures | Fixtures documented |
 | BG-007 | done | implementation | Add SQLite import session schema/repository | API tests pass |
-| BG-008 | todo | implementation | Add `POST /api/imports` and `GET /api/imports/:id` | API tests pass |
+| BG-008 | done | implementation | Add `POST /api/imports` and `GET /api/imports/:id` | API tests pass |
 | BG-009 | todo | implementation | Implement deterministic Douban paste parser | Parser tests pass |
 | BG-010 | todo | implementation | Add import parse endpoint | API tests pass |
 | BG-011 | todo | planning | Define review/commit acceptance cases | Cases documented |
