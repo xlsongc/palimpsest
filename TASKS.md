@@ -37,6 +37,22 @@ Build the project foundation without coupling future parser, metadata, graph, an
 
 ## Completed Implementation Packet
 
+BG-006 completed by implementation agent and reviewed by planning agent:
+
+```md
+## Task: BG-006 Douban Paste Fixtures
+
+Result:
+- Added representative Douban paste fixtures under `apps/api/tests/fixtures/douban_paste/`.
+- Added fixture assumptions under `docs/fixtures/douban-paste.md`.
+- No parser, database, or API implementation was added.
+- Review fix: anonymized user-like copied text before public commit.
+
+Verification:
+- `python3 -m json.tool apps/api/tests/fixtures/douban_paste/*_expected.json`
+- `cd apps/api && .venv/bin/python -m pytest`
+```
+
 First packet completed by implementation agent:
 
 ```md
@@ -81,47 +97,58 @@ Handoff Required:
 
 ## Next Implementation Packet
 
-Recommended next packet for opencode + MiMo. The planning agent will review the handoff before parser implementation starts.
+Recommended next packet for opencode + MiMo. The planning agent will review before any API endpoint or parser task starts.
 
 ```md
-## Task: BG-006 Douban Paste Fixtures
+## Task: BG-007 SQLite Import Session Repository
 
 Context:
-We need realistic parser fixtures before writing parser code. The goal is to make Douban import test-driven and auditable.
+Now that parser fixtures exist, create the durable import-session foundation. This task should define SQLite-backed persistence for import sessions and import rows, but it should not expose API endpoints or implement parser logic yet.
 
 Scope:
-- Own `apps/api/tests/fixtures/douban_paste/**`
-- May add `docs/fixtures/douban-paste.md`
-- Do not implement parser logic yet
-- Do not change database or API code
+- Own `apps/api/app/db/**`
+- Own `apps/api/app/repositories/**`
+- Own `apps/api/app/schemas/imports.py` if useful for typed DTOs
+- Own `apps/api/tests/test_import_repository.py`
+- May update `apps/api/pyproject.toml` only if adding a justified DB dependency
+- Do not change route files except imports required by tests
+- Do not add import API endpoints yet
+- Do not implement Douban parser logic
 
 Requirements:
-- Add at least 3 raw fixture files:
-  - `read_list_raw.txt`
-  - `want_list_raw.txt`
-  - `mixed_noisy_raw.txt`
-- Add expected parsed JSON files for each fixture:
-  - `read_list_expected.json`
-  - `want_list_expected.json`
-  - `mixed_noisy_expected.json`
-- Each expected row should include `raw_fragment`, `title`, `status`, optional visible fields, `confidence`, and `warnings`.
-- Document assumptions about copied Douban formats.
+- Add a minimal SQLite connection/session utility.
+- Add schema creation for:
+  - `import_sessions`
+  - `import_rows`
+- Add repository functions or class methods for:
+  - creating an import session with `source`, `raw_input`, and computed `raw_hash`
+  - retrieving an import session by id
+  - adding import rows linked to a session
+  - listing import rows for a session in `row_index` order
+- Preserve raw input unchanged.
+- Use deterministic SHA-256 hashing for raw input.
+- Keep repository code free of parser/provider/LLM behavior.
+- Prefer simple, explicit code over a broad ORM abstraction.
 
 Acceptance Criteria:
-- Fixture files are readable and expected JSON is valid.
-- Fixtures cover happy path and noisy input.
-- No parser implementation is added.
+- Tests can create an isolated temporary SQLite database.
+- Tests prove raw input is stored unchanged.
+- Tests prove `raw_hash` is deterministic.
+- Tests prove import rows are linked to sessions and returned in row order.
+- No parser code, metadata lookup, or route endpoint is added.
 
 Constraints:
-- No parser code.
-- No database changes.
+- Low coupling: repository does persistence only.
+- Do not introduce Alembic/migrations yet unless strongly justified.
+- Do not store local DB files in git.
 
 Verification:
-- `python -m json.tool <expected-json-file>` works for all expected JSON files.
+- `cd apps/api && .venv/bin/python -m pytest`
 
 Handoff Required:
 - Changed files.
-- Assumptions about Douban copied text.
-- Any real sample gaps that need user input.
+- DB dependency decision, if any.
+- Repository API summary.
 - Verification results.
+- Risks or follow-ups.
 ```
