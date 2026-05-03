@@ -66,6 +66,19 @@ CREATE TABLE IF NOT EXISTS user_book_entries (
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE TABLE IF NOT EXISTS book_edges (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_book_id INTEGER NOT NULL REFERENCES books(id),
+    target_book_id INTEGER NOT NULL REFERENCES books(id),
+    edge_type TEXT NOT NULL,
+    weight REAL NOT NULL DEFAULT 0,
+    reason TEXT,
+    evidence_json TEXT,
+    generated_by TEXT NOT NULL DEFAULT 'deterministic_v1',
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 """
 
 DEFAULT_DB_PATH = Path(__file__).resolve().parents[4] / "data" / "local" / "book_graph.db"

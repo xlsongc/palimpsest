@@ -133,3 +133,36 @@ export function commitImport(sessionId: number) {
 export function getValidation(sessionId: number) {
   return request<ValidationReportDTO>(`/imports/${sessionId}/validate`);
 }
+
+// --- Graph ---
+
+export interface GraphNodeDTO {
+  id: number;
+  title: string;
+  authors: string[];
+  status: string | null;
+  rating: number | null;
+  tags: string[];
+}
+
+export interface GraphEdgeDTO {
+  id: number;
+  source_book_id: number;
+  target_book_id: number;
+  edge_type: string;
+  weight: number;
+  reason: string | null;
+}
+
+export interface GraphResponseDTO {
+  nodes: GraphNodeDTO[];
+  edges: GraphEdgeDTO[];
+}
+
+export function getGraph() {
+  return request<GraphResponseDTO>("/graph");
+}
+
+export function rebuildGraph() {
+  return request<GraphResponseDTO>("/graph/rebuild", { method: "POST" });
+}

@@ -173,3 +173,101 @@ def test_noise_only_returns_no_rows():
     result = parse_douban_paste("我的读书\n豆瓣读书搜索\n赞 回复\n加载更多")
     assert len(result.rows) == 0
     assert "no_books_found" in result.warnings
+
+
+def test_free_text_extracts_multiple_reviewable_candidates():
+    result = parse_douban_paste(
+        "最近读完了《思考，快与慢》，还想读 Poor Charlie's Almanack。"
+        "另一本是 黄金时代 作者王小波。"
+    )
+
+    assert [row.title for row in result.rows] == [
+        "思考，快与慢",
+        "Poor Charlie's Almanack",
+        "黄金时代",
+    ]
+    assert result.rows[0].status == "read"
+    assert result.rows[1].status == "want"
+    assert result.rows[2].authors == ["王小波"]
+    assert all(row.confidence < 0.95 for row in result.rows)
+
+
+def test_messy_slash_and_plain_english_lines_do_not_collapse_to_one_row():
+    result = parse_douban_paste(
+        "思考，快与慢 / Daniel Kahneman / 2012 / 中信 / 读过 2024-01-02 / 9分\n"
+        "random nav footer ###\n"
+        "Poor Charlie's Almanack Charles T. Munger want 2025-04-01"
+    )
+
+    assert [row.title for row in result.rows] == [
+        "思考，快与慢",
+        "Poor Charlie's Almanack",
+    ]
+    assert result.rows[0].authors == ["Daniel Kahneman"]
+    assert result.rows[0].status == "read"
+    assert result.rows[0].read_date == "2024-01-02"
+    assert result.rows[0].rating == 9.0
+    assert result.rows[1].authors == ["Charles T. Munger"]
+    assert result.rows[1].status == "want"
+    assert result.rows[1].marked_date == "2025-04-01"
+
+
+def test_one_title_per_line_extracts_each_title_as_low_confidence_candidate():
+    result = parse_douban_paste("思考，快与慢\nPoor Charlie's Almanack\n黄金时代\n")
+
+    assert [row.title for row in result.rows] == [
+        "思考，快与慢",
+        "Poor Charlie's Almanack",
+        "黄金时代",
+    ]
+    assert all(row.confidence < 0.5 for row in result.rows)
+    assert all("missing_status" in row.warnings for row in result.rows)
+
+
+def test_realistic_douban_profile_copy_extracts_entries_across_status_sections():
+    raw = """
+我在读的书(20)
+读书主页 书评 笔记 在读 想读 读过 作者 豆列 书单 设置 | 豆瓣主页
+按时间排序 · 按评价排序 · 按标题排序1-15 / 20 grid
+list
+
+Common Stocks and Uncommon Profits and Other Writings
+Philip A. Fisher / Wiley / 1996-9-19 / GBP 19.99
+2026-05-02 在读 标签: 芒格荐书
+
+修改    删除
+纸质版 98.34元 加入购书单
+
+我想读的书(75)
+
+软件设计的哲学
+[美]约翰·奥斯特豪特（John Ousterhout） / 茹炳晟 / 人民邮电出版社 / 2024-11 / 69.80元
+2026-05-03 想读 标签: vibecoding
+
+修改    删除
+
+我读过的书(26)
+
+The Almanack of Naval Ravikant : A Guide to Wealth and Happiness
+Naval Ravikant、Eric Jorgenson / Magrathea Publishing / 2020-9-8 / USD 12.84
+2026-04-19 读过
+个人长评内容已脱敏。
+
+修改    删除
+"""
+
+    result = parse_douban_paste(raw)
+
+    assert [row.title for row in result.rows] == [
+        "Common Stocks and Uncommon Profits and Other Writings",
+        "软件设计的哲学",
+        "The Almanack of Naval Ravikant : A Guide to Wealth and Happiness",
+    ]
+    assert [row.status for row in result.rows] == ["reading", "want", "read"]
+    assert result.rows[0].marked_date == "2026-05-02"
+    assert result.rows[1].marked_date == "2026-05-03"
+    assert result.rows[2].read_date == "2026-04-19"
+    assert result.rows[0].tags == ["芒格荐书"]
+    assert result.rows[1].tags == ["vibecoding"]
+    assert result.rows[0].authors == ["Philip A. Fisher"]
+    assert result.rows[2].authors == ["Naval Ravikant", "Eric Jorgenson"]

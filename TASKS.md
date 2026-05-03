@@ -32,10 +32,14 @@ Build the project foundation without coupling future parser, metadata, graph, an
 | BG-012 | done | implementation | Add review and commit backend flow | API tests pass |
 | BG-013 | done | implementation | Add validation report endpoint | API tests pass |
 | BG-014 | done | implementation | Add basic import/review UI | Manual flow works |
-| BG-015 | todo | planning | Define graph edge scoring v1 | Tests specified |
-| BG-016 | todo | implementation | Add graph DTOs and deterministic edge builder | Edge tests pass |
+| BG-015 | done | planning | Define graph edge scoring v1 | Tests specified |
+| BG-016 | done | implementation | Add graph DTOs and deterministic edge builder | Edge tests pass |
 | BG-017a | done | planning | Replace repo preview with high-fidelity static reading graph mock | Web build passes |
-| BG-017 | todo | implementation | Adapt `book_graph_v2.html` design into React graph page | Web build + manual check |
+| BG-017 | done | implementation | Adapt `book_graph_v2.html` design into React graph page | Web build + manual check |
+| BG-018 | done | implementation | Make Douban parser tolerant of messy copy/paste formats | Parser tests pass |
+| BG-019 | done | planning | Add AI extraction and metadata enrichment design | Design documented |
+| BG-020 | todo | implementation | Add metadata provider persistence and mocked provider | API tests pass |
+| BG-021 | todo | implementation | Add optional AI extraction provider interface | Fake-provider tests pass |
 
 ## Completed Implementation Packet
 
