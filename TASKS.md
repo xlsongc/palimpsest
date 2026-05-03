@@ -22,7 +22,7 @@ Build the project foundation without coupling future parser, metadata, graph, an
 | BG-003 | done | implementation | Scaffold FastAPI app under `apps/api` | `.venv/bin/python -m pytest` passes |
 | BG-004 | done | implementation | Scaffold React + TypeScript + Vite app under `apps/web` | `npm run build` passes |
 | BG-005 | done | implementation | Add frontend API client and health status display | Web calls `/api/health` |
-| BG-006 | todo | planning | Provide representative Douban paste fixtures | Fixtures documented |
+| BG-006 | done | implementation | Provide representative Douban paste fixtures | Fixtures documented |
 | BG-007 | todo | implementation | Add SQLite import session schema/repository | API tests pass |
 | BG-008 | todo | implementation | Add `POST /api/imports` and `GET /api/imports/:id` | API tests pass |
 | BG-009 | todo | implementation | Implement deterministic Douban paste parser | Parser tests pass |
