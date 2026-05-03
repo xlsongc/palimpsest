@@ -294,6 +294,70 @@ button {
   opacity: 0.78;
 }
 
+.graph-layer .zones ellipse {
+  mix-blend-mode: multiply;
+}
+
+.graph-layer .node-layer circle {
+  transition:
+    fill-opacity 0.16s ease,
+    stroke-opacity 0.16s ease,
+    r 0.16s ease;
+}
+
+.graph-layer .label-layer text {
+  transition:
+    fill 0.16s ease,
+    font-size 0.16s ease;
+}
+
+.node-label {
+  font-family: "Courier Prime", "Courier New", monospace;
+  letter-spacing: 0.01em;
+  paint-order: stroke;
+  pointer-events: none;
+  stroke: rgba(244, 239, 231, 0.92);
+  stroke-width: 5px;
+  user-select: none;
+}
+
+.graph-tooltip {
+  position: fixed;
+  z-index: 20;
+  display: grid;
+  gap: 4px;
+  max-width: 240px;
+  border: 1px solid rgba(34, 29, 24, 0.16);
+  background: rgba(250, 247, 242, 0.94);
+  box-shadow: 0 2px 12px rgba(36, 30, 24, 0.1);
+  color: #231d17;
+  opacity: 0;
+  padding: 10px 13px;
+  pointer-events: none;
+  transition: opacity 0.1s;
+}
+
+.graph-tooltip strong {
+  color: #231d17;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.graph-tooltip span,
+.graph-tooltip em {
+  color: #92887e;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.graph-tooltip em {
+  color: #c1b8af;
+  font-style: italic;
+  font-weight: 400;
+}
+
 /* Cluster rings */
 .cluster-ring {
   position: absolute;
