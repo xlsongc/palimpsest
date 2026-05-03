@@ -1,12 +1,26 @@
-# Book Graph
+# Palimpsest / 忘筌
 
-Book Graph is a local-first personal reading intelligence system. The goal is not only to record books, but to turn reading into searchable, connected, reusable, and actionable knowledge assets.
+[中文介绍](docs/README.zh.md)
+
+> 愿你得鱼而忘筌；得意而忘言。
+
+Palimpsest / 忘筌 is a local-first personal reading intelligence system. The goal is not only to record books, but to turn reading into searchable, connected, reusable, and actionable knowledge assets.
+
+```text
+                 ·
+          ·              ·
+
+              ><(((º>
+
+       water without water
+       trace without capture
+```
 
 Product thesis:
 
 ```text
 Not "I have read many books."
-Instead: "I can call on what I have read whenever a project, question, or decision needs it."
+Instead: "I can let what I have read return when a project, question, or decision needs it."
 ```
 
 ## Why This Exists

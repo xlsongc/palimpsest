@@ -1,18 +1,26 @@
-# Book Graph MVP Spec
+# Palimpsest / 忘筌 MVP Spec
 
 ## Purpose
 
-Book Graph is a personal reading data system with a web graph interface. Its job is to move a user's reading history out of Douban-style pages and into an owned database, enrich it with book metadata, verify that imports are complete, and render the resulting reading network as an explorable webpage.
+Palimpsest / 忘筌 is a personal reading data system with a web graph interface. Its job is to move a user's reading history out of Douban-style pages and into an owned database, enrich it with book metadata, verify that imports are complete, and render the resulting reading network as an explorable webpage.
 
 The graph is not only a visual effect. It should explain how books connect through author, topic, tags, reading sequence, user notes, and external metadata.
 
 The deeper product goal is to maximize the user's reading leverage. This project is not only a record of books read. It should turn reading into searchable, connected, reusable, and actionable knowledge assets.
 
+Name thesis:
+
+```text
+Palimpsest: reading traces are layered, overwritten, and made visible again.
+忘筌: books, notes, graphs, and AI are means, not ends.
+愿你得鱼而忘筌；得意而忘言。
+```
+
 Product thesis:
 
 ```text
 Not "I have read many books."
-Instead: "I can call on what I have read whenever a project, question, or decision needs it."
+Instead: "I can let what I have read return when a project, question, or decision needs it."
 ```
 
 ## Reading Leverage Goals

@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.routes.health import router as health_router
 
-app = FastAPI(title="Book Graph API")
+app = FastAPI(title="Palimpsest API")
 
 app.add_middleware(
     CORSMiddleware,

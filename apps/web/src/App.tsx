@@ -20,7 +20,8 @@ function App() {
 
   return (
     <div style={{ padding: "2rem", fontFamily: "system-ui, sans-serif" }}>
-      <h1>Book Graph</h1>
+      <h1>Palimpsest / 忘筌</h1>
+      <p>愿你得鱼而忘筌；得意而忘言。</p>
       <div>
         <h2>Backend Status</h2>
         {error && <p style={{ color: "red" }}>Error: {error}</p>}

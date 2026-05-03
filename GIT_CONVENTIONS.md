@@ -2,7 +2,7 @@
 
 ## Repository Strategy
 
-Use this repository as the source of truth for the Book Graph product, architecture, agent protocol, backend, frontend, and design artifacts.
+Use this repository as the source of truth for the Palimpsest / 忘筌 product, architecture, agent protocol, backend, frontend, and design artifacts.
 
 Default branch:
 
