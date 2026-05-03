@@ -100,3 +100,27 @@ class ImportCommitResponseDTO(BaseModel):
     committed: list[CommittedRowDTO]
     duplicates: list[DuplicateRowDTO]
     skipped: list[SkippedRowDTO]
+
+
+class ValidationRowDTO(BaseModel):
+    row_id: int
+    row_index: int
+    title: str
+    status: str
+    book_id: int | None
+    entry_id: int | None
+    warnings: list[str]
+
+
+class ValidationReportDTO(BaseModel):
+    session_id: int
+    raw_input_hash: str
+    parsed_count: int
+    accepted_count: int
+    rejected_count: int
+    needs_edit_count: int
+    committed_count: int
+    duplicate_count: int
+    failed_count: int
+    warning_count: int
+    rows: list[ValidationRowDTO]

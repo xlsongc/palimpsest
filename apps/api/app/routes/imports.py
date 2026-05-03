@@ -23,10 +23,13 @@ from app.schemas.imports import (
     ReviewRowDTO,
     SkippedRowDTO,
     UpdatedRowDTO,
+    ValidationReportDTO,
+    ValidationRowDTO,
 )
 from app.services.import_commit_service import commit_import_session
 from app.services.import_parse_service import parse_import_session
 from app.services.import_review_service import get_review_rows, submit_review
+from app.services.import_validation_service import get_validation_report
 
 router = APIRouter()
 
@@ -161,5 +164,37 @@ def commit_import(session_id: int, conn: DbDep):
         skipped=[
             SkippedRowDTO(row_id=r.row_id, reason=r.reason)
             for r in result.skipped
+        ],
+    )
+
+
+@router.get("/imports/{session_id}/validate", response_model=ValidationReportDTO)
+def validate_import(session_id: int, conn: DbDep):
+    report = get_validation_report(conn, session_id)
+    if report is None:
+        raise HTTPException(status_code=404, detail="Import session not found")
+
+    return ValidationReportDTO(
+        session_id=report.session_id,
+        raw_input_hash=report.raw_input_hash,
+        parsed_count=report.parsed_count,
+        accepted_count=report.accepted_count,
+        rejected_count=report.rejected_count,
+        needs_edit_count=report.needs_edit_count,
+        committed_count=report.committed_count,
+        duplicate_count=report.duplicate_count,
+        failed_count=report.failed_count,
+        warning_count=report.warning_count,
+        rows=[
+            ValidationRowDTO(
+                row_id=r.row_id,
+                row_index=r.row_index,
+                title=r.title,
+                status=r.status,
+                book_id=r.book_id,
+                entry_id=r.entry_id,
+                warnings=r.warnings,
+            )
+            for r in report.rows
         ],
     )

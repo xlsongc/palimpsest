@@ -18,6 +18,11 @@ from app.services.import_review_service import (
     get_review_rows,
     submit_review,
 )
+from app.services.import_validation_service import (
+    ValidationReport,
+    ValidationRow,
+    get_validation_report,
+)
 
 __all__ = [
     "ParsedRowDTO",
@@ -30,8 +35,11 @@ __all__ = [
     "ReviewSubmitResult",
     "SkippedRow",
     "UpdatedRow",
+    "ValidationReport",
+    "ValidationRow",
     "commit_import_session",
     "get_review_rows",
+    "get_validation_report",
     "parse_import_session",
     "submit_review",
 ]

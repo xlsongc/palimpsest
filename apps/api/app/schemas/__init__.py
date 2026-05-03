@@ -13,6 +13,8 @@ from app.schemas.imports import (
     ReviewRowDTO,
     SkippedRowDTO,
     UpdatedRowDTO,
+    ValidationReportDTO,
+    ValidationRowDTO,
 )
 
 __all__ = [
@@ -30,4 +32,6 @@ __all__ = [
     "ReviewRowDTO",
     "SkippedRowDTO",
     "UpdatedRowDTO",
+    "ValidationReportDTO",
+    "ValidationRowDTO",
 ]
