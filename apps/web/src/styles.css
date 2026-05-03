@@ -15,7 +15,7 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  overflow: hidden;
+  overflow: auto;
   background:
     radial-gradient(circle at 82% 18%, rgba(128, 74, 44, 0.08), transparent 24%),
     linear-gradient(120deg, rgba(42, 78, 134, 0.05), transparent 42%),
@@ -28,15 +28,21 @@ input {
 }
 
 button {
+  cursor: pointer;
   color: inherit;
 }
 
 .reading-graph-shell {
   min-height: 100vh;
+  overflow: hidden;
   background:
     linear-gradient(rgba(35, 29, 22, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(35, 29, 22, 0.025) 1px, transparent 1px);
   background-size: 48px 48px;
+}
+
+.import-shell {
+  overflow: auto;
 }
 
 .graph-topbar {
@@ -127,6 +133,20 @@ button {
 .search input:focus + span,
 .search input:not(:placeholder-shown) + span {
   display: none;
+}
+
+.topbar-note {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  border-right: 1px solid rgba(34, 29, 24, 0.18);
+  padding: 0 34px;
+  color: #9a9187;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .book-count {
@@ -578,6 +598,7 @@ button {
   .brand,
   .graph-topbar nav,
   .search,
+  .topbar-note,
   .book-count {
     min-height: 58px;
     border-right: 0;

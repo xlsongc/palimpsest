@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import "./styles.css";
+import ImportPage from "./features/import/ImportPage";
+import "./features/import/styles.css";
 
 type ReadingStatus = "read" | "reading" | "want";
 type ThemeKey =
@@ -131,6 +133,7 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<keyof typeof detailById>("poor");
   const [activeStatus, setActiveStatus] = useState<"all" | ReadingStatus>("all");
+  const [view, setView] = useState<"graph" | "import">("graph");
   const selected = detailById[selectedId];
 
   useEffect(() => {
@@ -148,6 +151,30 @@ function App() {
     if (error) return "API offline";
     return "API checking";
   }, [error, health]);
+
+  if (view === "import") {
+    return (
+      <main className="reading-graph-shell import-shell">
+        <header className="graph-topbar">
+          <div className="brand">
+            <strong>Niko · Reading Graph</strong>
+            <span>/</span>
+            <span>阅读图谱</span>
+          </div>
+          <nav aria-label="Primary view">
+            <button onClick={() => setView("graph")}>GRAPH</button>
+            <button className="active">IMPORT</button>
+          </nav>
+          <div className="topbar-note">Capture / Review / Commit</div>
+          <div className="book-count">
+            <strong>01</strong>
+            <span>import</span>
+          </div>
+        </header>
+        <ImportPage />
+      </main>
+    );
+  }
 
   return (
     <main className="reading-graph-shell">
@@ -172,6 +199,7 @@ function App() {
               {label}
             </button>
           ))}
+          <button onClick={() => setView("import")}>IMPORT</button>
         </nav>
         <label className="search">
           <span>搜索书名...</span>
