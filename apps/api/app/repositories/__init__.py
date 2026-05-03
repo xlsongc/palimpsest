@@ -21,6 +21,7 @@ from app.repositories.library_repository import (
     create_user_book_entry,
     find_book_by_title_authors,
     get_book,
+    get_user_book_entry_by_source_row,
 )
 
 __all__ = [
@@ -44,4 +45,5 @@ __all__ = [
     "create_user_book_entry",
     "find_book_by_title_authors",
     "get_book",
+    "get_user_book_entry_by_source_row",
 ]

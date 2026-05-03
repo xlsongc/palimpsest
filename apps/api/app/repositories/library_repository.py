@@ -126,6 +126,17 @@ def create_user_book_entry(
     return entry
 
 
+def get_user_book_entry_by_source_row(
+    conn: sqlite3.Connection, source_row_id: int
+) -> UserBookEntry | None:
+    row = conn.execute(
+        "SELECT * FROM user_book_entries WHERE source_row_id = ?", (source_row_id,)
+    ).fetchone()
+    if row is None:
+        return None
+    return _row_to_entry(row)
+
+
 def _get_user_book_entry(
     conn: sqlite3.Connection, entry_id: int
 ) -> UserBookEntry | None:

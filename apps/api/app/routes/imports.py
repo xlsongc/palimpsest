@@ -10,6 +10,9 @@ from app.repositories.import_repository import (
     get_import_session,
 )
 from app.schemas.imports import (
+    CommittedRowDTO,
+    DuplicateRowDTO,
+    ImportCommitResponseDTO,
     ImportCreateRequest,
     ImportParseResponseDTO,
     ImportParseRowDTO,
@@ -18,8 +21,10 @@ from app.schemas.imports import (
     ImportReviewSubmitResponseDTO,
     ImportSessionDTO,
     ReviewRowDTO,
+    SkippedRowDTO,
     UpdatedRowDTO,
 )
+from app.services.import_commit_service import commit_import_session
 from app.services.import_parse_service import parse_import_session
 from app.services.import_review_service import get_review_rows, submit_review
 
@@ -130,5 +135,31 @@ def submit_review_action(session_id: int, body: ImportReviewRequestDTO, conn: Db
         updated_rows=[
             UpdatedRowDTO(row_id=r.row_id, status=r.status)
             for r in result.updated_rows
+        ],
+    )
+
+
+@router.post("/imports/{session_id}/commit", response_model=ImportCommitResponseDTO)
+def commit_import(session_id: int, conn: DbDep):
+    result = commit_import_session(conn, session_id)
+
+    if result.error == "session_not_found":
+        raise HTTPException(status_code=404, detail="Import session not found")
+    if result.error == "already_committed":
+        raise HTTPException(status_code=409, detail="Session already committed")
+
+    return ImportCommitResponseDTO(
+        session=_to_dto(result.session),
+        committed=[
+            CommittedRowDTO(row_id=r.row_id, book_id=r.book_id, entry_id=r.entry_id)
+            for r in result.committed
+        ],
+        duplicates=[
+            DuplicateRowDTO(row_id=r.row_id, existing_book_id=r.existing_book_id)
+            for r in result.duplicates
+        ],
+        skipped=[
+            SkippedRowDTO(row_id=r.row_id, reason=r.reason)
+            for r in result.skipped
         ],
     )

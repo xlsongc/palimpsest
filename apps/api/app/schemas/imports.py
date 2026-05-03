@@ -77,3 +77,26 @@ class UpdatedRowDTO(BaseModel):
 class ImportReviewSubmitResponseDTO(BaseModel):
     session: ImportSessionDTO
     updated_rows: list[UpdatedRowDTO]
+
+
+class CommittedRowDTO(BaseModel):
+    row_id: int
+    book_id: int
+    entry_id: int
+
+
+class DuplicateRowDTO(BaseModel):
+    row_id: int
+    existing_book_id: int
+
+
+class SkippedRowDTO(BaseModel):
+    row_id: int
+    reason: str
+
+
+class ImportCommitResponseDTO(BaseModel):
+    session: ImportSessionDTO
+    committed: list[CommittedRowDTO]
+    duplicates: list[DuplicateRowDTO]
+    skipped: list[SkippedRowDTO]

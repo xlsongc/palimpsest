@@ -3,6 +3,13 @@ from app.services.import_parse_service import (
     ParseResultDTO,
     parse_import_session,
 )
+from app.services.import_commit_service import (
+    CommittedRow,
+    CommitResult,
+    DuplicateRow,
+    SkippedRow,
+    commit_import_session,
+)
 from app.services.import_review_service import (
     ReviewListResult,
     ReviewRowView,
@@ -15,10 +22,15 @@ from app.services.import_review_service import (
 __all__ = [
     "ParsedRowDTO",
     "ParseResultDTO",
+    "CommittedRow",
+    "CommitResult",
+    "DuplicateRow",
     "ReviewListResult",
     "ReviewRowView",
     "ReviewSubmitResult",
+    "SkippedRow",
     "UpdatedRow",
+    "commit_import_session",
     "get_review_rows",
     "parse_import_session",
     "submit_review",

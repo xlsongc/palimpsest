@@ -1,4 +1,7 @@
 from app.schemas.imports import (
+    CommittedRowDTO,
+    DuplicateRowDTO,
+    ImportCommitResponseDTO,
     ImportCreateRequest,
     ImportParseResponseDTO,
     ImportParseRowDTO,
@@ -8,10 +11,14 @@ from app.schemas.imports import (
     ImportSessionDTO,
     ReviewRowAction,
     ReviewRowDTO,
+    SkippedRowDTO,
     UpdatedRowDTO,
 )
 
 __all__ = [
+    "CommittedRowDTO",
+    "DuplicateRowDTO",
+    "ImportCommitResponseDTO",
     "ImportCreateRequest",
     "ImportParseResponseDTO",
     "ImportParseRowDTO",
@@ -21,5 +28,6 @@ __all__ = [
     "ImportSessionDTO",
     "ReviewRowAction",
     "ReviewRowDTO",
+    "SkippedRowDTO",
     "UpdatedRowDTO",
 ]
