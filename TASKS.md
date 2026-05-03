@@ -33,6 +33,7 @@ Build the project foundation without coupling future parser, metadata, graph, an
 | BG-014 | todo | implementation | Add basic import/review UI | Manual flow works |
 | BG-015 | todo | planning | Define graph edge scoring v1 | Tests specified |
 | BG-016 | todo | implementation | Add graph DTOs and deterministic edge builder | Edge tests pass |
+| BG-017a | done | planning | Replace repo preview with high-fidelity static reading graph mock | Web build passes |
 | BG-017 | todo | implementation | Adapt `book_graph_v2.html` design into React graph page | Web build + manual check |
 
 ## Completed Implementation Packet
