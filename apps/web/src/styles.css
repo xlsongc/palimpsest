@@ -220,49 +220,6 @@ button {
     #eee9df;
 }
 
-/* Theme fields */
-.theme-field {
-  position: absolute;
-  border: 1px solid rgba(88, 82, 76, 0.08);
-  border-radius: 50%;
-  filter: blur(0.2px);
-  opacity: 0.62;
-  transform: rotate(-12deg);
-  pointer-events: none;
-}
-
-.finance-field {
-  right: 7%;
-  top: 8%;
-  width: 680px;
-  height: 620px;
-  background: rgba(42, 79, 134, 0.13);
-}
-
-.cs-field {
-  left: 6%;
-  top: 4%;
-  width: 360px;
-  height: 520px;
-  background: rgba(31, 116, 87, 0.1);
-}
-
-.history-field {
-  left: 40%;
-  top: 6%;
-  width: 520px;
-  height: 700px;
-  background: rgba(139, 58, 43, 0.08);
-}
-
-.humanities-field {
-  right: 1%;
-  top: -18%;
-  width: 540px;
-  height: 880px;
-  background: rgba(124, 93, 52, 0.08);
-}
-
 .graph-layer {
   position: absolute;
   inset: 0;

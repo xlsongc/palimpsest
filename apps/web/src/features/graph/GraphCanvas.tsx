@@ -26,8 +26,8 @@ interface SimNode extends d3.SimulationNodeDatum {
 
 interface SimLink extends d3.SimulationLinkDatum<SimNode> {
   id: number;
-  source: number | SimNode;
-  target: number | SimNode;
+  source: string | SimNode;
+  target: string | SimNode;
   source_book_id: number;
   target_book_id: number;
   edge_type: string;
@@ -56,39 +56,47 @@ function normalizeStatus(status: string | null): ReadingStatus {
   return "want";
 }
 
-function stableHash(input: string): number {
-  let hash = 2166136261;
-  for (let index = 0; index < input.length; index += 1) {
-    hash ^= input.charCodeAt(index);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function stableUnit(seed: string, salt: string): number {
-  return (stableHash(`${seed}:${salt}`) % 1000) / 1000;
-}
-
 function displayTitle(title: string): string {
   return title.length > 22 ? `${title.slice(0, 20)}...` : title;
 }
 
 function nodeRadius(node: SimNode): number {
-  const base = node.status === "read" ? 10 : node.status === "reading" ? 8 : 5.5;
+  const base = node.status === "want" ? 8.8 : 10;
   const ratingBoost = node.rating !== null && node.rating >= 8.5 ? 3 : 0;
   return base + node.degree * 1.2 + ratingBoost;
 }
 
 function statusFillOpacity(status: ReadingStatus): number {
-  if (status === "read") return 0.92;
-  if (status === "reading") return 0.6;
-  return 0.18;
+  if (status === "read") return 0.82;
+  if (status === "reading") return 0.72;
+  return 0.5;
 }
 
 function statusStroke(status: ReadingStatus): string {
   if (status === "read") return "#2B6B3A";
   if (status === "reading") return "#8B6914";
   return "#9A9088";
+}
+
+function statusStrokeWidth(status: ReadingStatus): number {
+  if (status === "want") return 1.8;
+  return 2.2;
+}
+
+function statusDash(status: ReadingStatus): string {
+  return status === "reading" ? "4,2" : "none";
+}
+
+function edgeStrength(link: SimLink): number {
+  return Math.max(1, Math.min(link.weight || 1, 5));
+}
+
+function edgeWidth(link: SimLink): number {
+  return Math.max(0.5, edgeStrength(link) * 0.55);
+}
+
+function edgeOpacity(link: SimLink): number {
+  return Math.min(0.38, 0.14 + edgeStrength(link) * 0.04);
 }
 
 function curvePath(link: SimLink): string {
@@ -105,19 +113,6 @@ function curvePath(link: SimLink): string {
   const nx = (-dy / len) * off;
   const ny = (dx / len) * off;
   return `M${sx},${sy} Q${(sx + tx) / 2 + nx},${(sy + ty) / 2 + ny} ${tx},${ty}`;
-}
-
-function makeThemeAnchors(width: number, height: number): Record<ThemeKey, { x: number; y: number }> {
-  return {
-    cs: { x: width * 0.18, y: height * 0.34 },
-    ai: { x: width * 0.36, y: height * 0.44 },
-    history: { x: width * 0.55, y: height * 0.32 },
-    finance: { x: width * 0.68, y: height * 0.5 },
-    literature: { x: width * 0.82, y: height * 0.2 },
-    psychology: { x: width * 0.82, y: height * 0.42 },
-    math: { x: width * 0.36, y: height * 0.72 },
-    biography: { x: width * 0.58, y: height * 0.62 },
-  };
 }
 
 export default function GraphCanvas({
@@ -152,7 +147,6 @@ export default function GraphCanvas({
     const rect = svgElement.getBoundingClientRect();
     const width = Math.max(rect.width, 900);
     const height = Math.max(rect.height, 640);
-    const anchors = makeThemeAnchors(width, height);
 
     const degree = new Map<number, number>();
     nodes.forEach((node) => degree.set(node.id, 0));
@@ -163,15 +157,11 @@ export default function GraphCanvas({
 
     const simNodes: SimNode[] = nodes.map((node) => {
       const theme = inferTheme(node.tags);
-      const anchor = anchors[theme];
-      const seed = `${node.id}:${node.title}`;
       return {
         ...node,
         status: normalizeStatus(node.status),
         theme,
         degree: degree.get(node.id) ?? 0,
-        x: anchor.x + (stableUnit(seed, "x") - 0.5) * 220,
-        y: anchor.y + (stableUnit(seed, "y") - 0.5) * 180,
       };
     });
     const nodeById = new Map(simNodes.map((node) => [node.id, node]));
@@ -179,8 +169,8 @@ export default function GraphCanvas({
       .filter((edge) => nodeById.has(edge.source_book_id) && nodeById.has(edge.target_book_id))
       .map((edge) => ({
         ...edge,
-        source: edge.source_book_id,
-        target: edge.target_book_id,
+        source: String(edge.source_book_id),
+        target: String(edge.target_book_id),
       }));
 
     const defs = svg.append("defs");
@@ -223,8 +213,12 @@ export default function GraphCanvas({
         const source = nodeById.get(link.source_book_id);
         return source ? themes[source.theme].color : "#C4BCB4";
       })
-      .attr("stroke-width", (link) => Math.max(0.5, link.weight * 0.55))
-      .attr("stroke-opacity", (link) => 0.14 + link.weight * 0.04);
+      .attr("stroke-width", edgeWidth)
+      .attr("stroke-opacity", edgeOpacity)
+      .attr("stroke-dasharray", (link) => {
+        const source = nodeById.get(link.source_book_id);
+        return source ? statusDash(source.status) : "none";
+      });
 
     const nodeSel = nodeGroup
       .selectAll<SVGCircleElement, SimNode>("circle")
@@ -234,8 +228,8 @@ export default function GraphCanvas({
       .attr("fill", (node) => themes[node.theme].color)
       .attr("fill-opacity", (node) => statusFillOpacity(node.status))
       .attr("stroke", (node) => statusStroke(node.status))
-      .attr("stroke-width", (node) => (node.status === "read" ? 2 : node.status === "reading" ? 1.6 : 1))
-      .attr("stroke-dasharray", (node) => (node.status === "reading" ? "4,2" : "none"))
+      .attr("stroke-width", (node) => statusStrokeWidth(node.status))
+      .attr("stroke-dasharray", (node) => statusDash(node.status))
       .attr("filter", (node) => (node.status === "read" ? "url(#graph-node-shadow)" : "none"))
       .style("cursor", "pointer")
       .call(
@@ -268,9 +262,9 @@ export default function GraphCanvas({
         if (node.status !== "want" || node.degree >= 2) return displayTitle(node.title);
         return "";
       })
-      .attr("font-size", "14px")
-      .attr("fill", (node) => (node.status === "read" ? "#1A1714" : node.status === "reading" ? "#3D3830" : "#9A9088"))
-      .attr("font-weight", (node) => (node.status === "read" ? "700" : "400"));
+      .attr("font-size", "14.2px")
+      .attr("fill", (node) => (node.status === "want" ? "#6B6358" : "#1A1714"))
+      .attr("font-weight", (node) => (node.status === "want" ? "600" : "700"));
 
     function connectedIds(node: SimNode): Set<number> {
       const ids = new Set<number>([node.id]);
@@ -357,7 +351,7 @@ export default function GraphCanvas({
         })
         .attr("stroke-opacity", (node) => {
           if (!isVisible(node)) return 0;
-          if (!selectedIds) return node.status === "want" ? 0.45 : 0.85;
+          if (!selectedIds) return node.status === "want" ? 0.76 : node.status === "reading" ? 0.94 : 0.9;
           return selectedIds.has(node.id) ? 1 : 0.06;
         })
         .attr("r", (node) => (selected === node.id ? nodeRadius(node) * 1.18 : nodeRadius(node)));
@@ -370,22 +364,26 @@ export default function GraphCanvas({
         .attr("stroke-opacity", (link) => {
           const [source, target] = linkEndpoints(link);
           if (!isVisible(source) || !isVisible(target)) return 0;
-          if (!selectedIds) return 0.14 + link.weight * 0.04;
+          if (!selectedIds) return edgeOpacity(link);
           return selectedIds.has(source.id) && selectedIds.has(target.id) ? 0.66 : 0.03;
         })
         .attr("stroke-width", (link) => {
           const [source, target] = linkEndpoints(link);
           const active = selectedIds?.has(source.id) && selectedIds.has(target.id);
-          return active ? Math.max(1.2, link.weight * 1.1) : Math.max(0.5, link.weight * 0.55);
+          return active ? Math.max(1.2, edgeStrength(link) * 1.1) : edgeWidth(link);
         });
 
       labelSel
         .attr("display", (node) => (isVisible(node) ? null : "none"))
         .attr("fill", (node) => {
-          if (!selectedIds) return node.status === "read" ? "#1A1714" : node.status === "reading" ? "#3D3830" : "#9A9088";
+          if (!selectedIds) return node.status === "want" ? "#6B6358" : "#1A1714";
           return selectedIds.has(node.id) ? "#1A1714" : "#C4BCB4";
         })
-        .attr("font-size", (node) => (selected === node.id ? "15px" : "14px"));
+        .attr("font-size", (node) => {
+          if (selected === node.id) return "15.5px";
+          return "14.2px";
+        })
+        .attr("font-weight", (node) => (node.status === "want" ? "600" : "700"));
 
       if (selectedNode) drawRing(selectedIds ?? new Set([selectedNode.id]), selectedNode.theme);
       else if (!focusIds) ringGroup.selectAll("*").remove();
@@ -451,19 +449,19 @@ export default function GraphCanvas({
         d3
           .forceLink<SimNode, SimLink>(simLinks)
           .id((node) => String(node.id))
-          .distance((link) => 55 + (5 - Math.min(link.weight || 1, 5)) * 29)
+          .distance((link) => 30 + (5 - Math.min(link.weight || 1, 5)) * 16)
           .strength(0.7),
       )
-      .force("charge", d3.forceManyBody<SimNode>().strength(-280))
-      .force("center", d3.forceCenter(width / 2, height / 2 + TOPBAR_HEIGHT / 2).strength(0.02))
-      .force("collide", d3.forceCollide<SimNode>().radius((node) => nodeRadius(node) + 14))
-      .force("x", d3.forceX<SimNode>((node) => anchors[node.theme].x).strength(0.018))
-      .force("y", d3.forceY<SimNode>((node) => anchors[node.theme].y).strength(0.018));
+      .force("charge", d3.forceManyBody<SimNode>().strength(-160))
+      .force("center", d3.forceCenter(width / 2, height / 2 + TOPBAR_HEIGHT / 2).strength(0.08))
+      .force("collide", d3.forceCollide<SimNode>().radius((node) => nodeRadius(node) + 10))
+      .force("x", d3.forceX<SimNode>(width / 2).strength(0.04))
+      .force("y", d3.forceY<SimNode>(height / 2 + TOPBAR_HEIGHT / 2).strength(0.04));
 
     let fitDone = false;
     const zoneTimer = window.setInterval(() => {
       drawZones();
-      if (!fitDone && simulation.alpha() < 0.12) {
+      if (!fitDone && simulation.alpha() < 0.05) {
         fitDone = true;
         autoFit();
       }
@@ -514,10 +512,6 @@ export default function GraphCanvas({
 
   return (
     <section className="graph-workbench" aria-label="Reading graph preview">
-      <div className="theme-field finance-field" />
-      <div className="theme-field cs-field" />
-      <div className="theme-field history-field" />
-      <div className="theme-field humanities-field" />
       <svg ref={svgRef} className="graph-layer" role="presentation" />
       <div ref={tooltipRef} className="graph-tooltip" />
     </section>
